@@ -1,0 +1,76 @@
+@startuml
+class Odontologo {
+- id: Integer
+- matricula: String
+- nombre: String
+- apellido: String
+
++ Odontologo(id Integer, matricula String, nombre String, apellido String)
++ Odontologo(matricula String, nombre String, apellido String)
++ Odontologo()
+
++getters
++setters
+
+}
+
+interface IDao<T> {
++ guardar(t T): T
++ eliminar(id Integer): void
++ buscar(id Integer): T
++ buscarTodos(): List<T>
++ actualizar(t T): T
+}
+
+class OdontologoService {
+- odontologoIDAo: IDao<Odontologo>
+
++ public OdontologoService( odontologoDao IDao<Odontologo>)
+
++ public guardar (odontologo Odontologo): Odontologo
++ public eliminar (id Integer):void
++ public buscar (id Integer): Odontologo
++ public buscarTodos() : List<Odontologo>
++ public actualizar(paciente Paciente) : Odontologo
+}
+
+class DaoOdontologoH2 {
+- configuracionJDBC: ConfiguracionJDBC
+
++ public guardar (odontologo Odontologo): Odontologo
++ public eliminar (id Integer):void
++ public buscar (id Integer): Odontologo
++ public buscarTodos() : List<Odontologo>
++ public actualizar(paciente Paciente) : Odontologo
+}
+
+class ConfiguracionJDBC {
+- logger : Logger
+- jdbDriver : String
+- bdUrl : String
+- nombreUsuario: String
+- password : String
+
++ ConfiguracionJDBC( jdbDriver String, dbUrl String, nombreUsuario String, password String)
+
++ conectarConBaseDeDatos(): Connection
+}
+
+class OdontologoController {
+- odontologoService: OdontologoService
+
++ public guardar (odontologo Odontologo): Odontologo
++ public eliminar (id Integer):void
++ public buscar (id Integer): Odontologo
++ public buscarTodos() : List<Odontologo>
++ public actualizar(paciente Paciente) : Odontologo
+}
+
+Odontologo <.up-. OdontologoService: usa
+OdontologoService --> IDao
+DaoOdontologoH2 --> IDao: implementa
+DaoOdontologoH2 .-.> Odontologo: usa
+ConfiguracionJDBC <-- DaoOdontologoH2
+OdontologoController -down-> OdontologoService
+OdontologoController --> vista
+@enduml

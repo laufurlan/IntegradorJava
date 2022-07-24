@@ -1,0 +1,211 @@
+@startuml
+
+class Domicilio {
+- id: Integer
+- calle: String
+- numero: String
+- localidad: String
+- provincia: String
+
++ Domicilio(id Integer, calle String, numero String, localidad String, provincia String)
++ Domicilio(calle String, numero String, localidad String, provincia String)
++ Domicilio()
+
++ getters
++ setters
+}
+
+class Paciente {
+- id: Integer
+- nombre: String
+- apellido: String
+- dni: String
+- fechaIngreso: Date
+- domicilio: Domicilio
+
++ Paciente(id Integer, nombre String, apellido String, dni String, fechaIngreso Date, domicilio Domicilio)
++ Paciente(nombre String, apellido String, dni String, fechaIngreso Date, domicilio Domicilio)
++ Paciente ()
+
++ getters
++ setters
+}
+
+class Odontologo {
+- id: Integer
+- matricula: String
+- nombre: String
+- apellido: String
+
++ Odontologo(id Integer, matricula String, nombre String, apellido String)
++ Odontologo(matricula String, nombre String, apellido String)
++ Odontologo()
+
++getters
++setters
+
+}
+
+class Turno {
+- id: Integer
+- paciente: Paciente
+- odontologo: Odontologo
+- fecha: Date
+
++ Turno(id Integer, paciente Paciente, odontologo Odontologo, fecha Date)
++ Turno(paciente Paciente, odontologo Odontologo, fecha Date)
++ Turno()
+}
+
+interface IDao<T> {
++ guardar(t T): T
++ eliminar(id Integer): void
++ buscar(id Integer): T
++ buscarTodos(): List<T>
++ actualizar(t T): T
+}
+
+class DomicilioService {
+- domicilioDao: IDao<Domicilio>
+
++ public DomicilioService( domicilioDao IDao<Domicilio>)
+
++ public guardar (domicilio Domicilio): Domicilio
++ public eliminar (id Integer): void
++ public buscar (id Integer): Domicilio
++ public buscarTodos() : List<Domicilio>
++ public actualizar(domicilio Domicilio) : Domicilio
+}
+
+class PacienteService {
+- pacienteDao: IDao<Paciente>
+
++ public PacienteService( pacienteDao IDao<Paciente>)
+
++ public guardar (paciente Paciente): Paciente
++ public eliminar (id Integer): void
++ public buscar (id Integer): Paciente
++ public buscarTodos() : List<Paciente>
++ public actualizar(paciente Paciente) : Paciente
+}
+
+class OdontologoService {
+- odontologoIDAo: IDao<Odontologo>
+
++ public OdontologoService( odontologoDao IDao<Odontologo>)
+
++ public guardar (odontologo Odontologo): Odontologo
++ public eliminar (id Integer):void
++ public buscar (id Integer): Odontologo
++ public buscarTodos() : List<Odontologo>
++ public actualizar(paciente Paciente) : Odontologo
+}
+
+class TurnoService {
+- turnoDao: IDao<Turno>
+
++ public TurnoService( turnoDao IDao<Turno>)
+
++ public guardar (turno Turno): Turno
++ public eliminar (id Integer): void
++ public buscar (id Integer): Turno
++ public buscarTodos() : List<Turno>
++ public actualizar(turno Turno) : Turno
+}
+
+class DaoDomicilioH2 {
+- configuracionJDBC: ConfiguracionJDBC
+
++ public guardar (domicilio Domicilio): Domicilio
++ public eliminar (id Integer): void
++ public buscar (id Integer): Domicilio
++ public buscarTodos() : List<Domicilio>
++ public actualizar(domicilio Domicilio) : Domicilio
+}
+
+class DaoPacienteH2 {
+- configuracionJDBC: ConfiguracionJDBC
+
++ public guardar (paciente Paciente): Paciente
++ public eliminar (id Integer): void
++ public buscar (id Integer): Paciente
++ public buscarTodos() : List<Paciente>
++ public actualizar(paciente Paciente) : Paciente
+}
+
+class DaoOdontologoH2 {
+- configuracionJDBC: ConfiguracionJDBC
+
++ public guardar (odontologo Odontologo): Odontologo
++ public eliminar (id Integer):void
++ public buscar (id Integer): Odontologo
++ public buscarTodos() : List<Odontologo>
++ public actualizar(paciente Paciente) : Odontologo
+}
+
+class DaoTurnoRegistry {
+- turnos: List<Turno>
+
++ public guardar (turno Turno): Turno
++ public eliminar (id Integer):void
++ public buscar (id Integer): Turno
++ public buscarTodos() : List<Turno>
++ public actualizar(turno Turno) : Turno
+}
+
+class ConfiguracionJDBC {
+- logger : Logger
+- jdbDriver : String
+- bdUrl : String
+- nombreUsuario: String
+- password : String
+
++ ConfiguracionJDBC( jdbDriver String, dbUrl String, nombreUsuario String, password String)
+
++ conectarConBaseDeDatos(): Connection
+}
+
+class OdontologoController {
+- odontologoService: OdontologoService
+
+}
+
+class PacienteController {
+- pacienteService : PacienteService
+}
+
+class TurnoController {
+- turnoService : TurnoService
+}
+
+Domicilio <.-. DomicilioService: usa
+DomicilioService --> IDao
+DaoDomicilioH2 --> IDao: implementa
+DaoDomicilioH2 .-up.> Domicilio: usa
+ConfiguracionJDBC <-- DaoDomicilioH2
+
+Paciente <.-. PacienteService: usa
+PacienteService --> IDao
+DaoPacienteH2 -left-> IDao: implementa
+DaoPacienteH2 .-up.> Paciente: usa
+ConfiguracionJDBC <-- DaoPacienteH2
+PacienteController --> PacienteService
+
+Odontologo <.-. OdontologoService: usa
+OdontologoService --> IDao
+DaoOdontologoH2 --> IDao: implementa
+DaoOdontologoH2 .-up.> Odontologo: usa
+ConfiguracionJDBC <-- DaoOdontologoH2
+OdontologoController --> OdontologoService
+
+Turno <.-. TurnoService: usa
+TurnoService --> IDao
+DaoTurnoRegistry --> IDao: implementa
+DaoTurnoRegistry .-up.> Turno: usa
+TurnoController --> TurnoService
+
+
+
+
+
+@enduml
