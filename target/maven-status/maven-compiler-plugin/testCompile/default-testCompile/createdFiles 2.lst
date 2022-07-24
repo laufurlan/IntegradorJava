@@ -1,0 +1,4 @@
+com\example\clinicadental\serviceTest\TurnoServiceTest.class
+com\example\clinicadental\ClinicaDentalApplicationTests.class
+com\example\clinicadental\serviceTest\PacienteServiceTest.class
+com\example\clinicadental\serviceTest\OdontologoServiceTest.class
